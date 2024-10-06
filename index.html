@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List & Status Check</title>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e6e6e6 100%);
+            color: #333;
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+           
+        }
+
+        .container {
+            max-width: 800px;
+            min-height: 150px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: height 0.3s ease;
+            flex-grow: 1;
+        }
+
+        .container.expanded {
+            min-height: auto;
+            height: auto;
+        }
+
+        .logo {
+            display: block;
+            max-width: 200px;
+            margin: 0 auto 20px auto;
+            cursor: pointer;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            color: #000000;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 10px;
+        }
+
+        .users-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .users-list li {
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .users-list li:hover {
+            background-color: #e0e0e0;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .button-group button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .button-group button:hover {
+            background-color: #5d5d5d;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .status-display {
+            margin-top: 30px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            display: none;
+        }
+
+        .status-display.active {
+            display: block;
+        }
+
+        .status-display.success {
+            border-color: #28a745;
+            color: #28a745;
+        }
+
+        .status-display.error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #565656;
+            color: white;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-container" class="container">
+        <a href="/">
+            <img src="https://images.squarespace-cdn.com/content/v1/5a620d960abd04e6cae4477f/1708702373785-WPUZZ4K6IDP2VVPM7KVF/Foster-Partners-Logo-700x271-1.png" alt="Company Logo" class="logo">
+        </a>
+        <h1>User List & Status Check</h1>
+        <div class="button-group">
+            <button onclick="fetchUsers()">Fetch Users</button>
+            <button onclick="checkStatus()">Check Status & Show Users</button>
+        </div>
+        <ul id="users" class="users-list"></ul>
+        <div id="status" class="status-display"></div>
+        <div id="loader" style="display: none;">
+            <img src="https://icons8.com/preloaders/preloaders/1494/Preloader_7.gif" alt="Loading..." />
+        </div>
+    </div>
+
+    <script>
+        const usersList = document.getElementById('users');
+        const statusDisplay = document.getElementById('status');
+        const mainContainer = document.getElementById('main-container');
+
+        function fetchUsers() {
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+            mainContainer.classList.add('expanded');
+
+            fetch('/api/users')
+                .then(response => response.json())
+                .then(users => {
+                    loader.style.display = 'none';
+                    usersList.innerHTML = '';
+                    users.forEach(user => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<strong>${user.name}</strong> <span>${user.email}</span>`;
+                        li.classList.add('show');
+                        usersList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    loader.style.display = 'none';
+                    console.error('Error fetching users:', error);
+                    showStatus('Error fetching users', 'error');
+                });
+        }
+
+        function checkStatus() {
+            mainContainer.classList.add('expanded');
+
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(status => {
+                    showStatus(`Server status: ${status.status}`, 'success');
+                    fetchUsers();
+                })
+                .catch(error => {
+                    console.error('Error checking status:', error);
+                    showStatus('Error checking status', 'error');
+                });
+        }
+
+        function showStatus(message, type) {
+            statusDisplay.textContent = message;
+            statusDisplay.className = `status-display active ${type}`;
+        }
+    </script>
+
+    <footer class="footer">
+        <p>Created by Zeynab | © 2024</p>
+    </footer>
+</body>
+</html>
+
