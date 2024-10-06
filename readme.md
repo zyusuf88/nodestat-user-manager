@@ -2,6 +2,8 @@
 
 Welcome to the **User Management and Status Check App**! This project is a simple, intuitive way to manage users and monitor server status, built with Node.js, Docker, and MySQL.
 
+![Screenshot 2024-10-06 at 15 40 08](https://github.com/user-attachments/assets/87a1ba75-7199-4bf3-85c5-0def0d936894)
+
 ## Features
 - Fetch and display a list of users with a single click.
 - Check the current status of your server in real time.
@@ -9,10 +11,6 @@ Welcome to the **User Management and Status Check App**! This project is a simpl
 - Fully containerized with Docker for seamless setup.
 - MySQL database integration for robust data management.
 
-## Demo
-
-Check out the app in action:
-https://github.com/user-attachments/assets/d2e63ae9-5dc6-4e17-9094-e658f504162e
 
 
 ## Interact with the Application
@@ -25,6 +23,10 @@ Navigate to `http://localhost:80` in your browser.
 
 - **Check Status:** Sends a request to /api/status.
 - **Get Users:** Sends a request to /api/users.
+
+![Screenshot 2024-10-06 at 15 40 17](https://github.com/user-attachments/assets/90067aa2-1e50-4ea7-aa51-b557e6acb192)
+
+![Screenshot 2024-10-06 at 15 41 08](https://github.com/user-attachments/assets/941ad455-7fe5-41db-8d3e-9b29d85fb465)
 
 
 ### What Happens When the Buttons Are Pressed?
