@@ -12,7 +12,7 @@ Welcome to the **User Management and Status Check App**! This project is a simpl
 ## Demo
 
 Check out the app in action:
-https://github.com/user-attachments/assets/03428578-85ba-4a93-846b-1f4bbaa4c38e
+![demo of the app](https://github.com/user-attachments/assets/03428578-85ba-4a93-846b-1f4bbaa4c38e)
 
 
 ## Interact with the Application
