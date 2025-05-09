@@ -1,9 +1,24 @@
 const mysql = require('mysql2');
 const express = require('express');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Start the server immediately
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+app.get('/api/status', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 
 const dbConfig = {
   host: process.env.DB_HOST,
@@ -11,6 +26,8 @@ const dbConfig = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME
 };
+
+
 
 // Function to handle MySQL connection with retries
 function connectWithRetry() {
@@ -30,12 +47,9 @@ function connectWithRetry() {
 
 // Function to start the Express server
 function startServer(db) {
-  // Endpoint to check API status
-  app.get('/api/status', (req, res) => {
-    res.json({ status: 'ok' });
-  });
 
   // Endpoint to fetch users
+
   app.get('/api/users', (req, res) => {
     const query = 'SELECT * FROM users';
     db.query(query, (err, results) => {
@@ -48,18 +62,18 @@ function startServer(db) {
     });
   });
 
-  // Start the server
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
 }
 
-const path = require('path');
+  // // Start the server
+  // app.listen(PORT, '0.0.0.0', () => {
+  //   console.log(`Server running on port ${PORT}`);
+  // });
 
-// Serve the HTML file for the frontend
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
+
+// // Serve the HTML file for the frontend
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'index.html'));
+// });
 
 
 // Start the connection process
