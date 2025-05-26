@@ -2,8 +2,7 @@
 
 **NodeStat User Manager** is a lightweight Node.js application for managing users and checking server status in real-time. It features a simple HTML frontend, REST API backend, and a MySQL database, all fully containerised with Docker. Infrastructure is provisioned using Terraform and deployed to AWS ECS, with optional database seeding using Lambda or ECS tasks.
 
-
-![Image](https://github.com/user-attachments/assets/b08b4b82-2170-4f52-bfd6-011210ba5870)
+- ![demo of app ](https://github.com/user-attachments/assets/a6225c79-f35d-4661-ba18-c437f1e76e24)
 
 ## Features
 - Fetch and display a list of users with a single click.
@@ -101,8 +100,6 @@ Navigate to `http://localhost:3000` in your browser.
 
 - **Check Status:** Sends a request to /api/status.
 - **Get Users:** Sends a request to /api/users.
-
-- ![demo of app ](https://github.com/user-attachments/assets/a6225c79-f35d-4661-ba18-c437f1e76e24)
 
 
 ### What Happens When the Buttons Are Pressed?
