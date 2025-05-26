@@ -1,6 +1,6 @@
 #  NodeStat User Manager
 
-**NodeStat User Manager** is a lightweight Node.js application for managing users and checking server status in real-time. It features a simple HTML frontend, REST API backend, and a MySQL database, all fully containerized with Docker. Infrastructure is provisioned using Terraform and deployed to AWS ECS, with optional database seeding using Lambda or ECS tasks.
+**NodeStat User Manager** is a lightweight Node.js application for managing users and checking server status in real-time. It features a simple HTML frontend, REST API backend, and a MySQL database, all fully containerised with Docker. Infrastructure is provisioned using Terraform and deployed to AWS ECS, with optional database seeding using Lambda or ECS tasks.
 
 
 ![Image](https://github.com/user-attachments/assets/b08b4b82-2170-4f52-bfd6-011210ba5870)
@@ -9,8 +9,85 @@
 - Fetch and display a list of users with a single click.
 - Check the current status of your server in real time.
 - Modern and clean UI for easy navigation.
-- Fully containerized with Docker for seamless setup.
+- Fully containerised with Docker for seamless setup.
 - MySQL database integration for robust data management.
+
+## Tech Stack
+
+- **Frontend**: Static HTML + native JavaScript
+- **Backend**: Node.js + Express
+- **Database**: Amazon RDS (MySQL)
+- **Containerization**: Docker + docker-compose (for local)
+- **Deployment**: ECS (Fargate), RDS, Lambda
+- **Infrastructure**: Terraform (modularized)
+- **Cloud Services**: AWS (ECS, RDS, Lambda, S3, Route53, ACM, IAM)
+
+
+
+
+## Structure
+
+```
+.
+├── app/
+│   ├── index.html
+│   ├── index.js
+│   └── init.sql
+├── lambda/
+│   └── lambda_build/
+│       ├── lambda_function.py
+│       └── lambda.zip
+├── terraform/
+│   ├── backend.hcl
+│   ├── main.tf
+│   ├── provider.tf
+│   ├── terraform.tfvars
+│   ├── variables.tf
+│   └── modules/
+│       ├── acm/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       ├── alb/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       ├── ecs/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       ├── iam/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       ├── lambda/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   ├── variables.tf
+│       │   └── init-users-final-test.sql
+│       ├── rds/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       ├── route53/
+│       │   ├── main.tf
+│       │   └── variables.tf
+│       ├── s3/
+│       │   └── main.tf
+│       ├── security/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       └── vpc/
+│           ├── main.tf
+│           ├── outputs.tf
+│           └── variables.tf
+├── docker-compose.yml
+├── Dockerfile
+├── dockerfile.seeder
+└── README.md
+
+```
 
 
 
@@ -25,9 +102,6 @@ Navigate to `http://localhost:3000` in your browser.
 - **Check Status:** Sends a request to /api/status.
 - **Get Users:** Sends a request to /api/users.
 
-![Screenshot 2024-10-06 at 15 40 17](https://github.com/user-attachments/assets/90067aa2-1e50-4ea7-aa51-b557e6acb192)
-
-![Screenshot 2024-10-06 at 15 41 08](https://github.com/user-attachments/assets/941ad455-7fe5-41db-8d3e-9b29d85fb465)
 
 ### What Happens When the Buttons Are Pressed?
 
