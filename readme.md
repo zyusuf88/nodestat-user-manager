@@ -102,6 +102,8 @@ Navigate to `http://localhost:3000` in your browser.
 - **Check Status:** Sends a request to /api/status.
 - **Get Users:** Sends a request to /api/users.
 
+- ![demo of app ](https://github.com/user-attachments/assets/a6225c79-f35d-4661-ba18-c437f1e76e24)
+
 
 ### What Happens When the Buttons Are Pressed?
 
