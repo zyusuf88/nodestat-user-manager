@@ -25,9 +25,7 @@ Navigate to `http://localhost:3000` in your browser.
 - **Check Status:** Sends a request to /api/status.
 - **Get Users:** Sends a request to /api/users.
 
-![Screenshot 2024-10-06 at 15 40 17](https://github.com/user-attachments/assets/90067aa2-1e50-4ea7-aa51-b557e6acb192)
-
-![Screenshot 2024-10-06 at 15 41 08](https://github.com/user-attachments/assets/941ad455-7fe5-41db-8d3e-9b29d85fb465)
+- ![demo of app ](https://github.com/user-attachments/assets/a6225c79-f35d-4661-ba18-c437f1e76e24)
 
 ### What Happens When the Buttons Are Pressed?
 
