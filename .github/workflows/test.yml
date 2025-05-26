@@ -1,0 +1,10 @@
+name: Test with act
+
+on: [push]
+
+jobs:
+  run-test:
+    runs-on: ubuntu-latest45
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Hello from act!"
