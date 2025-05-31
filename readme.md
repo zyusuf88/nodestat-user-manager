@@ -1,6 +1,9 @@
 #  NodeStat User Manager
 
-**NodeStat User Manager** is a lightweight Node.js application for managing users and checking server status in real-time. It features a simple HTML frontend, REST API backend, and a MySQL database, all fully containerised with Docker. Infrastructure is provisioned using Terraform and deployed to AWS ECS, with optional database seeding using Lambda or ECS tasks.
+**NodeStat User Manager** is a lightweight Node.js application designed to manage users and monitor server status in real time.
+
+It features a clean frontend, RESTful API, and MySQL backend all fully containerised with Docker and deployed to AWS using a **modular Terraform** setup. While the app is simple by design, it’s backed by a **production-grade cloud architecture**, including automated database seeding via Lambda, secure secret injection  and plans for CI/CD integration.
+
 
 - ![demo of app ](https://github.com/user-attachments/assets/a6225c79-f35d-4661-ba18-c437f1e76e24)
 
@@ -10,19 +13,6 @@
 - Modern and clean UI for easy navigation.
 - Fully containerised with Docker for seamless setup.
 - MySQL database integration for robust data management.
-
-## Tech Stack
-
-- **Frontend**: Static HTML + native JavaScript
-- **Backend**: Node.js + Express
-- **Database**: Amazon RDS (MySQL)
-- **Containerization**: Docker + docker-compose (for local)
-- **Deployment**: ECS (Fargate), RDS, Lambda
-- **Infrastructure**: Terraform (modularized)
-- **Cloud Services**: AWS (ECS, RDS, Lambda, S3, Route53, ACM, IAM)
-
-
-
 
 ## Structure
 
@@ -88,19 +78,57 @@
 
 ```
 
+## Tech Stack
+
+- **Frontend**: Static HTML + native JavaScript
+- **Backend**: Node.js + Express
+- **Database**: Amazon RDS (MySQL)
+- **Containerization**: Docker + docker-compose (for local)
+- **Deployment**: ECS (Fargate), RDS, Lambda
+- **Infrastructure**: Terraform (modularized)
+- **Cloud Services**: AWS (ECS, RDS, Lambda, S3, Route53, ACM, IAM)
+
+- The app is deployed  locally then Dockerised and pushed to Amazon ECR (Elastic Container Registry).
+- From there, it is deployed to Amazon ECS (Fargate) as part of a scalable service.
+- Terraform was used to provision and configure all AWS resources, including:
+    - VPC, subnets, routing, NAT gatewayand internet gatewayECS cluster and services
+    - secrets Manager for securely injecting DB credentials
+    -  S3 bucket for SQL seed file uploads
+    - Lambda function triggered on S3 init-*.sql uploads to seed the database
+    - Application Load Balancer (ALB) with HTTPS (via ACM)
+    - Domain setup via Route 53 with alias record targeting the ALB
+- Deployment is fully automated using CI/CD pipelines via GitHub Actions (to be integrated).
+
+## Data Seeding Process
+- Upload any file matching the pattern init-*.sql to the configured S3 bucket.
+- This triggers a Lambda function which connects to Amazon RDS and executes the SQL statements.
+- Once seeded, users are instantly available in the frontend app.
+
+## Lambda Seeding: Design & Flow
+
+The application includes an optional automated database initialisation pipeline using AWS Lambda and S3.
+
+###  Workflow
+
+1. A `.sql` seed file is uploaded to a designated S3 bucket.
+2. The upload event triggers a Lambda function via an S3 event notification.
+3. The Lambda function downloads the SQL file and establishes a secure connection to the RDS MySQL instance (using credentials securely injected via environment variables or AWS Secrets Manager).
+4. The Lambda executes the SQL commands against the RDS database to seed or reset data.
+
+> [! IMPORTANT]
+> CloudWatch Logs provided full-stack observability, from S3 event triggers to Lambda execution to ECS task behavior. <br>
+> CloudWatch also helped validate that ECS tasks were running correctly, environment variables were being passed as expected and application errors were surfaced in real time.
 
 
 ## Interact with the Application
 
-Once the containers are running, the application will be available on `http://localhost:3000`.
+<img width="601" alt="Image" src="https://github.com/user-attachments/assets/670b1461-6cc1-47c2-a88a-3b78d14ce694" />
 
-### Access the HTML Frontend
+The application is publicly accessible at:
 
-Navigate to `http://localhost:3000` in your browser.
+https://coder.yzeynab.com
 
-- **Check Status:** Sends a request to /api/status.
-- **Get Users:** Sends a request to /api/users.
-
+This domain is configured using Amazon Route 53 and served securely via an HTTPS-enabled Application Load Balancer with an AWS ACM certificate.
 
 ### What Happens When the Buttons Are Pressed?
 
@@ -110,25 +138,12 @@ Navigate to `http://localhost:3000` in your browser.
 -
 <img width="885" alt="Screenshot 2024-10-06 at 14 44 56" src="https://github.com/user-attachments/assets/2b10ebbf-73b2-4507-89ce-d7bf9a99fbca">
 
+## Conclusion
 
-## What's expected:
+NodeStat User Manager started as a simple app,   but this version is the result of a **full architectural revamp**.
 
-### 1. Functionality
-The setup works as expected:
-- **API Status Check:** The `/api/status` endpoint confirms the application is running.
-- **User Retrieval:** The `/api/users` endpoint successfully retrieves and displays users from the MySQL database.
-- **UI Functionality:** The web interface correctly shows users when the buttons "Fetch Users" or "Check Status & Show Users" are clicked.
+I took the opportunity to restructure the project around real-world cloud patterns: containerised the backend, modularised the Terraform setup, integrated secure credential management and automated database seeding using serverless triggers.
 
-### 2. Containerisation best Practices
-The Docker setup follows best practices:
-- **Separate Containers:** The Node.js application and MySQL database run in separate containers as defined in the `docker-compose.yml`.
-- **Environment Variables:** Sensitive data is managed using environment variables in a `.env` file.
-- **Optimised Dockerfile:** The Dockerfile is streamlined to ensure a small image size and quick build times.
-- **Port Mapping:** The application is accessible via `http://localhost` with proper port mapping.
-- **Volume Management:** Volume management is considered for potential data persistence.
+Every service,from ECS to Lambda to RDS was configured to follow **best practices**.
 
-### 3. Documentation
-The setup is straightforward and easy to deploy:
-- **Clear Instructions:** This README provides step-by-step instructions to build and run the application using Docker.
-- **Simple Deployment:** `docker-compose` makes the deployment process simple with just a few commands.
-- **Commented Code:** The codebase, including `Dockerfile` and `docker-compose.yml`, is well-commented for clarity.
+This isn't just a working demo, it's a scalable, production-ready foundation **built with real infrastructure experience**.
