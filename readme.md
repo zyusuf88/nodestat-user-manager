@@ -4,8 +4,7 @@
 
 It features a clean frontend, RESTful API, and MySQL backend all fully containerised with Docker and deployed to AWS using a **modular Terraform** setup. While the app is simple by design, it’s backed by a **production-grade cloud architecture**, including automated database seeding via Lambda, secure secret injection  and plans for CI/CD integration.
 
-
-- ![demo of app ](https://github.com/user-attachments/assets/a6225c79-f35d-4661-ba18-c437f1e76e24)
+ ![demo of app ](https://github.com/user-attachments/assets/a6225c79-f35d-4661-ba18-c437f1e76e24)
 
 ## Features
 - Fetch and display a list of users with a single click.
@@ -53,7 +52,7 @@ It features a clean frontend, RESTful API, and MySQL backend all fully container
 │       │   ├── main.tf
 │       │   ├── outputs.tf
 │       │   ├── variables.tf
-│       │   └── init-users-final-test.sql
+│       │   └── init-users.sql
 │       ├── rds/
 │       │   ├── main.tf
 │       │   ├── outputs.tf
@@ -83,21 +82,10 @@ It features a clean frontend, RESTful API, and MySQL backend all fully container
 - **Frontend**: Static HTML + native JavaScript
 - **Backend**: Node.js + Express
 - **Database**: Amazon RDS (MySQL)
-- **Containerization**: Docker + docker-compose (for local)
+- **Containerisation**: Docker + docker-compose (for local)
 - **Deployment**: ECS (Fargate), RDS, Lambda
-- **Infrastructure**: Terraform (modularized)
+- **Infrastructure**: Terraform (modularised)
 - **Cloud Services**: AWS (ECS, RDS, Lambda, S3, Route53, ACM, IAM)
-
-- The app is deployed  locally then Dockerised and pushed to Amazon ECR (Elastic Container Registry).
-- From there, it is deployed to Amazon ECS (Fargate) as part of a scalable service.
-- Terraform was used to provision and configure all AWS resources, including:
-    - VPC, subnets, routing, NAT gatewayand internet gatewayECS cluster and services
-    - secrets Manager for securely injecting DB credentials
-    -  S3 bucket for SQL seed file uploads
-    - Lambda function triggered on S3 init-*.sql uploads to seed the database
-    - Application Load Balancer (ALB) with HTTPS (via ACM)
-    - Domain setup via Route 53 with alias record targeting the ALB
-- Deployment is fully automated using CI/CD pipelines via GitHub Actions (to be integrated).
 
 ## Data Seeding Process
 - Upload any file matching the pattern init-*.sql to the configured S3 bucket.
@@ -115,7 +103,8 @@ The application includes an optional automated database initialisation pipeline 
 3. The Lambda function downloads the SQL file and establishes a secure connection to the RDS MySQL instance (using credentials securely injected via environment variables or AWS Secrets Manager).
 4. The Lambda executes the SQL commands against the RDS database to seed or reset data.
 
-> [! IMPORTANT]
+
+> [! IMPORTANT] <br>
 > CloudWatch Logs provided full-stack observability, from S3 event triggers to Lambda execution to ECS task behavior. <br>
 > CloudWatch also helped validate that ECS tasks were running correctly, environment variables were being passed as expected and application errors were surfaced in real time.
 
@@ -135,7 +124,6 @@ This domain is configured using Amazon Route 53 and served securely via an HTTPS
 - **Check Status**: When the "Check Status" button is pressed, it triggers a request to the /api/status endpoint. The response is displayed on the page, indicating whether the application is running correctly.
 
 - **Get Users**: When the "Get Users" button is pressed, it triggers a request to the /api/users endpoint. The response, which includes a list of users from the MySQL database, is displayed on the page.
--
 <img width="885" alt="Screenshot 2024-10-06 at 14 44 56" src="https://github.com/user-attachments/assets/2b10ebbf-73b2-4507-89ce-d7bf9a99fbca">
 
 ## Conclusion
