@@ -1,8 +1,10 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
-COPY package*.json ./
+COPY app/package.json ./package.json
+COPY app/package-lock.json ./package-lock.json
 RUN npm ci --only=production && npm cache clean --force
-COPY *.js index.html Logo.png init.sql ./
+COPY app/index.js app/index.html app/init.sql ./
+COPY app/assets ./assets
 
 FROM node:18-alpine
 WORKDIR /app

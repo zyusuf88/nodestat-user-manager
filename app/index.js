@@ -6,10 +6,6 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Start the server immediately
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-});
 
 app.get('/api/status', (req, res) => {
   res.json({ status: 'ok' });
@@ -22,28 +18,43 @@ app.get('/', (req, res) => {
 
 const dbConfig = {
   host: process.env.DB_HOST,
-  user: process.env.DB_USER,
+  user: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME
 };
 
 
+['DB_HOST', 'DB_USERNAME', 'DB_PASSWORD', 'DB_NAME'].forEach((key) => {
+  if (!process.env[key]) {
+    console.warn(` Environment variable ${key} is not set`);
+  }
+});
+
+let attempt = 0;
 
 // Function to handle MySQL connection with retries
 function connectWithRetry() {
+  attempt++;
+  console.log(`Attempt ${attempt}: Trying to connect to the DB...`);
+  console.log("Attempting DB connection with config:", {
+    host: dbConfig.host,
+    user: dbConfig.user,
+    database: dbConfig.database
+  });
+
   const db = mysql.createConnection(dbConfig);
 
   db.connect((err) => {
     if (err) {
-      console.error('Error connecting to the database:', err);
-      console.log('Retrying in 5 seconds...');
+      console.error(`DB connection failed: ${err.message}`);
       setTimeout(connectWithRetry, 5000); // Retry after 5 seconds
     } else {
       console.log('Connected to the MySQL database.');
-      startServer(db); // Start the server only if the connection is successful
+      startServer(db);
     }
   });
 }
+
 
 // Function to start the Express server
 function startServer(db) {
@@ -62,19 +73,11 @@ function startServer(db) {
     });
   });
 
+  // Start the server immediately
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 }
 
-  // // Start the server
-  // app.listen(PORT, '0.0.0.0', () => {
-  //   console.log(`Server running on port ${PORT}`);
-  // });
-
-
-// // Serve the HTML file for the frontend
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'index.html'));
-// });
-
-
-// Start the connection process
 connectWithRetry();
