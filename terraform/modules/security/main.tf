@@ -36,7 +36,7 @@ resource "aws_security_group" "this" {
   from_port   = 3306
   to_port     = 3306
   protocol    = "tcp"
-  cidr_blocks = var.allowed_cidr_blocks
+  self = true
 }
 
   egress {

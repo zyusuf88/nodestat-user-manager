@@ -33,7 +33,7 @@ resource "aws_ecs_task_definition" "this" {
       },
       {
       name  = "DB_PORT"
-      value = "3306"  # Default MySQL port
+      value = "3306"  # MySQL port
   }
 
     ]
@@ -98,6 +98,56 @@ resource "aws_cloudwatch_log_group" "ecs_logs" {
   retention_in_days = 14
 }
 
+
+resource "aws_ecs_task_definition" "db_seeder" {
+  family                   = "user-portal-db-seeder"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = 256
+  memory                   = 512
+  execution_role_arn       = var.execution_role_arn
+
+  container_definitions = jsonencode([
+    {
+      name      = "db-seeder",
+      image     = var.seeder_container,
+      essential = true,
+
+      secrets = [
+        {
+          name      = "DB_USERNAME"
+          valueFrom = "${var.db_secret_arn}:username::"
+        },
+        {
+          name      = "DB_PASSWORD"
+          valueFrom = "${var.db_secret_arn}:password::"
+        },
+        {
+          name      = "DB_NAME"
+          valueFrom = "${var.db_secret_arn}:dbname::"
+        },
+        {
+          name      = "DB_HOST"
+          valueFrom = "${var.db_secret_arn}:host::"
+        }
+      ],
+
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          "awslogs-group"         = "/ecs/db-seeder-task",
+          "awslogs-region"        = "eu-west-2",
+          "awslogs-stream-prefix" = "db-seeder"
+        }
+      }
+    }
+  ])
+
+  runtime_platform {
+    cpu_architecture        = "X86_64"
+    operating_system_family = "LINUX"
+  }
+}
 
 # ECS Service
 resource "aws_ecs_service" "this" {

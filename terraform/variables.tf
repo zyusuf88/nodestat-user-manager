@@ -48,6 +48,16 @@ variable "public_subnet_2" {
   default     = "10.0.2.0/24"
 }
 
+variable "private_subnet_1" {
+  description = "CIDR block for first private subnet"
+default = "10.0.3.0/24"
+}
+
+variable "private_subnet_2" {
+  description = "CIDR block for 2nd private subnet"
+default = "10.0.4.0/24"
+}
+
 variable "allowed_cidr_blocks" {
   description = "List of CIDR blocks allowed to access the services"
   type        = list(string)
@@ -96,6 +106,22 @@ variable "db_secret_name" {
 }
 
 variable "s3_bucket_name" {
+  type = string
+
+}
+
+variable "db_host" {
+  description = "MySQL hostname"
   type        = string
-   default     = ""
+}
+
+variable "db_identifier" {
+  description = "RDS database identifier"
+  type        = string
+}
+
+
+variable "seeder_container" {
+  description = "ECR image URI for the DB seeder container"
+  type        = string
 }

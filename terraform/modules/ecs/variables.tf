@@ -105,3 +105,9 @@ variable "rds_secret_arn" {
   description = "The ARN of the RDS secret"
   type        = string
 }
+
+
+variable "seeder_container" {
+  description = "ECR image URI for the DB seeder container"
+  type        = string
+}

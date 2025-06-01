@@ -9,5 +9,4 @@ variable "rds_secret_arn" {
 
 variable "s3_bucket_name" {
   type        = string
-   default     = ""
 }
