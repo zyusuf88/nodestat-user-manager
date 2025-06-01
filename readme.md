@@ -103,10 +103,13 @@ The application includes an optional automated database initialisation pipeline 
 3. The Lambda function downloads the SQL file and establishes a secure connection to the RDS MySQL instance (using credentials securely injected via environment variables or AWS Secrets Manager).
 4. The Lambda executes the SQL commands against the RDS database to seed or reset data.
 
+<br>
 
 > [! IMPORTANT] <br>
-> CloudWatch Logs provided full-stack observability, from S3 event triggers to Lambda execution to ECS task behavior. <br>
-> CloudWatch also helped validate that ECS tasks were running correctly, environment variables were being passed as expected and application errors were surfaced in real time.
+> **CloudWatch Logs** provided full-stack observability, from S3 event triggers to Lambda execution to ECS task behavior. <br>
+> Logs also confirmed environment variables and secrets were being injected correctly, and made silent failures (like missing IAM permissions) visible and actionable.
+
+---
 
 
 ## Interact with the Application
@@ -126,6 +129,25 @@ This domain is configured using Amazon Route 53 and served securely via an HTTPS
 - **Get Users**: When the "Get Users" button is pressed, it triggers a request to the /api/users endpoint. The response, which includes a list of users from the MySQL database, is displayed on the page.
 <img width="885" alt="Screenshot 2024-10-06 at 14 44 56" src="https://github.com/user-attachments/assets/2b10ebbf-73b2-4507-89ce-d7bf9a99fbca">
 
+
+## "Error Fetching Users"
+
+During initial testing, the frontend returned an `"Error fetching users"` message when attempting to retrieve data from the `/api/users` endpoint:
+
+![Image](https://github.com/user-attachments/assets/51a37501-3c6f-42e0-9134-316d16123007)
+
+This error occurred because the database was successfully provisioned, but had not yet been seeded — the `users` table didn't exist, resulting in a backend failure when queried.
+
+
+
+### How It Was Resolved
+
+To fix this, I simply seeded the database by uploading a SQL file to the project's configured S3 bucket. This is part of the infrastructure's serverless automation pipeline:
+
+```bash
+aws s3 cp ./init-users.sql s3://my-s3-bucket-673458/init-users.sql
+```
+---
 ## Conclusion
 
 NodeStat User Manager started as a simple app,   but this version is the result of a **full architectural revamp**.
