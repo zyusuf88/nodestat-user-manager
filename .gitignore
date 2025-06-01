@@ -3,7 +3,7 @@
 node_modules/
 .dockerignore
 .pre-commit-cache/
-backend.hcl
+*backend.hcl
 .terraform.lock.hcl
 
 lambda.zip
