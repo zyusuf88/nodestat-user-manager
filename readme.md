@@ -1,62 +1,159 @@
-# User Management and Status Check App
+#  NodeStat User Manager
 
-Welcome to the **User Management and Status Check App**! This project is a simple, intuitive way to manage users and monitor server status, built with Node.js, Docker, and MySQL.
+**NodeStat User Manager** is a lightweight Node.js application designed to manage users and monitor server status in real time.
 
-![Screenshot 2024-10-06 at 15 40 08](https://github.com/user-attachments/assets/87a1ba75-7199-4bf3-85c5-0def0d936894)
+It features a clean frontend, RESTful API, and MySQL backend all fully containerised with Docker and deployed to AWS using a **modular Terraform** setup. While the app is simple by design, it’s backed by a **production-grade cloud architecture**, including automated database seeding via Lambda, secure secret injection  and plans for CI/CD integration.
+
+ ![demo of app ](https://github.com/user-attachments/assets/a6225c79-f35d-4661-ba18-c437f1e76e24)
 
 ## Features
 - Fetch and display a list of users with a single click.
 - Check the current status of your server in real time.
 - Modern and clean UI for easy navigation.
-- Fully containerized with Docker for seamless setup.
+- Fully containerised with Docker for seamless setup.
 - MySQL database integration for robust data management.
 
+## Structure
+
+```
+.
+├── app/
+│   ├── index.html
+│   ├── index.js
+│   └── init.sql
+├── lambda/
+│   └── lambda_build/
+│       ├── lambda_function.py
+│       └── lambda.zip
+├── terraform/
+│   ├── backend.hcl
+│   ├── main.tf
+│   ├── provider.tf
+│   ├── terraform.tfvars
+│   ├── variables.tf
+│   └── modules/
+│       ├── acm/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       ├── alb/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       ├── ecs/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       ├── iam/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       ├── lambda/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   ├── variables.tf
+│       │   └── init-users.sql
+│       ├── rds/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       ├── route53/
+│       │   ├── main.tf
+│       │   └── variables.tf
+│       ├── s3/
+│       │   └── main.tf
+│       ├── security/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       └── vpc/
+│           ├── main.tf
+│           ├── outputs.tf
+│           └── variables.tf
+├── docker-compose.yml
+├── Dockerfile
+├── dockerfile.seeder
+└── README.md
+
+```
+
+## Tech Stack
+
+- **Frontend**: Static HTML + native JavaScript
+- **Backend**: Node.js + Express
+- **Database**: Amazon RDS (MySQL)
+- **Containerisation**: Docker + docker-compose (for local)
+- **Deployment**: ECS (Fargate), RDS, Lambda
+- **Infrastructure**: Terraform (modularised)
+- **Cloud Services**: AWS (ECS, RDS, Lambda, S3, Route53, ACM, IAM)
+
+## Data Seeding Process
+- Upload any file matching the pattern init-*.sql to the configured S3 bucket.
+- This triggers a Lambda function which connects to Amazon RDS and executes the SQL statements.
+- Once seeded, users are instantly available in the frontend app.
+
+## Lambda Seeding: Design & Flow
+
+The application includes an optional automated database initialisation pipeline using AWS Lambda and S3.
+
+###  Workflow
+
+1. A `.sql` seed file is uploaded to a designated S3 bucket.
+2. The upload event triggers a Lambda function via an S3 event notification.
+3. The Lambda function downloads the SQL file and establishes a secure connection to the RDS MySQL instance (using credentials securely injected via environment variables or AWS Secrets Manager).
+4. The Lambda executes the SQL commands against the RDS database to seed or reset data.
+
+<br>
+
+> [! IMPORTANT] <br>
+> **CloudWatch Logs** provided full-stack observability, from S3 event triggers to Lambda execution to ECS task behavior. <br>
+> Logs also confirmed environment variables and secrets were being injected correctly, and made silent failures (like missing IAM permissions) visible and actionable.
+
+---
 
 
 ## Interact with the Application
 
-Once the containers are running, the application will be available on `http://localhost:80`.
+<img width="601" alt="Image" src="https://github.com/user-attachments/assets/670b1461-6cc1-47c2-a88a-3b78d14ce694" />
 
-### Access the HTML Frontend
+The application is publicly accessible at:
 
-Navigate to `http://localhost:80` in your browser.
+https://coder.yzeynab.com
 
-- **Check Status:** Sends a request to /api/status.
-- **Get Users:** Sends a request to /api/users.
-
-![Screenshot 2024-10-06 at 15 40 17](https://github.com/user-attachments/assets/90067aa2-1e50-4ea7-aa51-b557e6acb192)
-
-![Screenshot 2024-10-06 at 15 41 08](https://github.com/user-attachments/assets/941ad455-7fe5-41db-8d3e-9b29d85fb465)
-
+This domain is configured using Amazon Route 53 and served securely via an HTTPS-enabled Application Load Balancer with an AWS ACM certificate.
 
 ### What Happens When the Buttons Are Pressed?
 
 - **Check Status**: When the "Check Status" button is pressed, it triggers a request to the /api/status endpoint. The response is displayed on the page, indicating whether the application is running correctly.
 
 - **Get Users**: When the "Get Users" button is pressed, it triggers a request to the /api/users endpoint. The response, which includes a list of users from the MySQL database, is displayed on the page.
-- 
 <img width="885" alt="Screenshot 2024-10-06 at 14 44 56" src="https://github.com/user-attachments/assets/2b10ebbf-73b2-4507-89ce-d7bf9a99fbca">
 
 
-## What's expected:
+## "Error Fetching Users"
 
-### 1. Functionality
-The setup works as expected:
-- **API Status Check:** The `/api/status` endpoint confirms the application is running.
-- **User Retrieval:** The `/api/users` endpoint successfully retrieves and displays users from the MySQL database.
-- **UI Functionality:** The web interface correctly shows users when the buttons "Fetch Users" or "Check Status & Show Users" are clicked.
+During initial testing, the frontend returned an `"Error fetching users"` message when attempting to retrieve data from the `/api/users` endpoint:
 
-### 2. Containerisation best Practices
-The Docker setup follows best practices:
-- **Separate Containers:** The Node.js application and MySQL database run in separate containers as defined in the `docker-compose.yml`.
-- **Environment Variables:** Sensitive data is managed using environment variables in a `.env` file.
-- **Optimised Dockerfile:** The Dockerfile is streamlined to ensure a small image size and quick build times.
-- **Port Mapping:** The application is accessible via `http://localhost` with proper port mapping.
-- **Volume Management:** Volume management is considered for potential data persistence.
+![Image](https://github.com/user-attachments/assets/51a37501-3c6f-42e0-9134-316d16123007)
 
-### 3. Documentation
-The setup is straightforward and easy to deploy:
-- **Clear Instructions:** This README provides step-by-step instructions to build and run the application using Docker.
-- **Simple Deployment:** `docker-compose` makes the deployment process simple with just a few commands.
-- **Commented Code:** The codebase, including `Dockerfile` and `docker-compose.yml`, is well-commented for clarity.
+This error occurred because the database was successfully provisioned, but had not yet been seeded — the `users` table didn't exist, resulting in a backend failure when queried.
 
+
+
+### How It Was Resolved
+
+To fix this, I simply seeded the database by uploading a SQL file to the project's configured S3 bucket. This is part of the infrastructure's serverless automation pipeline:
+
+```bash
+aws s3 cp ./init-users.sql s3://my-s3-bucket-673458/init-users.sql
+```
+---
+## Conclusion
+
+NodeStat User Manager started as a simple app,   but this version is the result of a **full architectural revamp**.
+
+I took the opportunity to restructure the project around real-world cloud patterns: containerised the backend, modularised the Terraform setup, integrated secure credential management and automated database seeding using serverless triggers.
+
+Every service,from ECS to Lambda to RDS was configured to follow **best practices**.
+
+This isn't just a working demo, it's a scalable, production-ready foundation **built with real infrastructure experience**.

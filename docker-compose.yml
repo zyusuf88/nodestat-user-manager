@@ -1,16 +1,17 @@
-version: '3.8'
+version: "3.8"
 services:
   web:
-    image: node:18  
+    build: .
     working_dir: /app
-    volumes:
-      - .:/app 
+    # volumes:
+    #   - .:/app
+    #   - /app/node_modules
     command: npm start
     ports:
       - "80:3000"
     environment:
       DB_HOST: mydb
-      DB_USER: ${DB_USER}
+      DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
 
@@ -22,14 +23,11 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
+      MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-
+      - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   mysql_data:
-
-      
