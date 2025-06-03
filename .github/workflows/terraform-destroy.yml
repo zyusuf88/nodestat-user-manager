@@ -62,7 +62,7 @@ jobs:
           -var="record_name=${{ vars.RECORD_NAME }}" \
           -var="task_role_arn=${{ secrets.TASK_ROLE_ARN }}" \
           -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \
-          -var="container_image=${{ github.event.inputs.container_image }}"\
+          -var="container_image=${{ github.event.inputs.container_image }}" \
           -var="db_name=${{ vars.DB_NAME }}" \
           -var="s3_bucket_name=${{ vars.S3_BUCKET_NAME }}" \
           -var="db_identifier=${{ vars.DB_IDENTIFIER }}" \

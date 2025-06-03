@@ -82,7 +82,6 @@ variable "container_image" {
   type = string
 }
 
-# In your variables.tf or root main.tf
 variable "db_username" {
   description = "The database username"
   type        = string
