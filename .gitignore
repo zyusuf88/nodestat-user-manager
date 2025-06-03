@@ -6,7 +6,7 @@ node_modules/
 *backend.hcl
 .terraform.lock.hcl
 
-lambda.zip
+
 lambda-package/
 
 
