@@ -155,6 +155,7 @@ jobs:
       - name: Run TFLint 
         run: tflint --recursive || true
 
+
       - name: Terraform Plan
         run: |
           terraform plan \
