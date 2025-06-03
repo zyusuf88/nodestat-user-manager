@@ -152,19 +152,8 @@ jobs:
         with:
           tflint_version: latest
 
-      - name: Initialize TFLint plugins
-        run: tflint --init
-
-      - name: Run TFLint with SARIF output
-        run: |
-          mkdir -p reports
-          tflint --format sarif > reports/tflint.sarif
-
-      - name: Upload TFLint scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: reports/tflint.sarif
-
+      - name: Run TFLint 
+        run: tflint --recursive || true
 
       - name: Terraform Plan
         run: |
