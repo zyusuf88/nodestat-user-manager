@@ -62,7 +62,15 @@ jobs:
           -var="record_name=${{ vars.RECORD_NAME }}" \
           -var="task_role_arn=${{ secrets.TASK_ROLE_ARN }}" \
           -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \
-          -var="container_image=${{ github.event.inputs.container_image }}"
+          -var="container_image=${{ github.event.inputs.container_image }}"\
+          -var="db_name=${{ vars.DB_NAME }}" \
+          -var="s3_bucket_name=${{ vars.S3_BUCKET_NAME }}" \
+          -var="db_identifier=${{ vars.DB_IDENTIFIER }}" \
+          -var="ssm_parameter_access=${{ secrets.SSM_PARAMETER_ACCESS }}" \
+          -var="db_username=${{ secrets.DB_USERNAME }}" \
+          -var="db_password=${{ secrets.DB_PASSWORD }}" \
+          -var="db_host=${{ secrets.DB_HOST }}" \
+          -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}"
 
       - name: Terraform Destroy ALB
         run: |
@@ -74,6 +82,14 @@ jobs:
             -var="task_role_arn=${{ secrets.TASK_ROLE_ARN }}" \
             -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \
             -var="container_image=${{ github.event.inputs.container_image }}" \
+            -var="db_name=${{ vars.DB_NAME }}" \
+            -var="s3_bucket_name=${{ vars.S3_BUCKET_NAME }}" \
+            -var="db_identifier=${{ vars.DB_IDENTIFIER }}" \
+            -var="ssm_parameter_access=${{ secrets.SSM_PARAMETER_ACCESS }}" \
+            -var="db_username=${{ secrets.DB_USERNAME }}" \
+            -var="db_password=${{ secrets.DB_PASSWORD }}" \
+            -var="db_host=${{ secrets.DB_HOST }}" \
+            -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}"
             -auto-approve
 
   full_destroy:
@@ -123,6 +139,14 @@ jobs:
             -var="task_role_arn=${{ secrets.TASK_ROLE_ARN }}" \
             -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \
             -var="container_image=${{ github.event.inputs.container_image }}" \
+            -var="db_name=${{ vars.DB_NAME }}" \
+            -var="s3_bucket_name=${{ vars.S3_BUCKET_NAME }}" \
+            -var="db_identifier=${{ vars.DB_IDENTIFIER }}" \
+            -var="ssm_parameter_access=${{ secrets.SSM_PARAMETER_ACCESS }}" \
+            -var="db_username=${{ secrets.DB_USERNAME }}" \
+            -var="db_password=${{ secrets.DB_PASSWORD }}" \
+            -var="db_host=${{ secrets.DB_HOST }}" \
+            -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}"
             -auto-approve
 
   delete_ecr_images:
