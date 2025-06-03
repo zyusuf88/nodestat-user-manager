@@ -147,7 +147,25 @@ jobs:
             -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}"
             -input=false \
             -out=tfplan
-           
+       
+      - name: Set up TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+
+      - name: Initialize TFLint plugins
+        run: tflint --init
+
+      - name: Run TFLint with SARIF output
+        run: |
+          mkdir -p reports
+          tflint --format sarif > reports/tflint.sarif || true
+
+      - name: Upload TFLint scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: reports/tflint.sarif
+
 
       - name: Terraform Plan
         run: |
