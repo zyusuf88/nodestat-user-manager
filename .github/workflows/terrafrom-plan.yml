@@ -7,7 +7,7 @@ on:
         description: 'Type "plan" to confirm generating a plan'
         required: true
         type: string
-      container_image:
+      ecr_repository:
         description: "Full ECR image URI with tag (e.g., 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-app:latest)"
         required: true
         type: string
@@ -141,8 +141,7 @@ jobs:
             -var="project_name=${{ vars.PROJECT_NAME }}" \
             -var="record_name=${{ vars.RECORD_NAME }}" \
             -var="task_role_arn=${{ secrets.TASK_ROLE_ARN }}" \
-            -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \
-            -var="container_image=${{ github.event.inputs.container_image }}" \
+            -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \          
             -var="db_name=${{ vars.DB_NAME }}" \
             -var="s3_bucket_name=${{ vars.S3_BUCKET_NAME }}" \
             -var="db_identifier=${{ vars.DB_IDENTIFIER }}" \
@@ -169,8 +168,7 @@ jobs:
             -var="project_name=${{ vars.PROJECT_NAME }}" \
             -var="record_name=${{ vars.RECORD_NAME }}" \
             -var="task_role_arn=${{ secrets.TASK_ROLE_ARN }}" \
-            -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \
-            -var="container_image=${{ github.event.inputs.container_image }}" \
+            -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \      
             -var="db_name=${{ vars.DB_NAME }}" \
             -var="s3_bucket_name=${{ vars.S3_BUCKET_NAME }}" \
             -var="db_identifier=${{ vars.DB_IDENTIFIER }}" \
