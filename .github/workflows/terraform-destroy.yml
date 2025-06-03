@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   alb_destroy:
-    name: "Destroy ALB"
+    name: Destroy ALB
     runs-on: ubuntu-latest
     if: github.event.inputs.confirm_destroy == 'destroy'
 
@@ -71,9 +71,9 @@ jobs:
           -var="db_password=${{ secrets.DB_PASSWORD }}" \
           -var="db_host=${{ secrets.DB_HOST }}" \
           -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}" \
-          -var="seeder_container=${{ env.SEEDER_CONTAINER }}" 
+          -var="seeder_container=${{ vars.SEEDER_CONTAINER }}" \
 
-      - name: Terraform Destroy ALB
+      - name: Destroy all terraform rescources
         run: |
           terraform destroy \
             -target="module.alb.aws_lb.this" \
@@ -91,7 +91,7 @@ jobs:
             -var="db_password=${{ secrets.DB_PASSWORD }}" \
             -var="db_host=${{ secrets.DB_HOST }}" \
             -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}" \
-            -var="seeder_container=${{ vars.SEEDER_CONTAINER }}" 
+            -var="seeder_container=${{ vars.SEEDER_CONTAINER }}" \
             -auto-approve
 
   full_destroy:
@@ -149,11 +149,11 @@ jobs:
             -var="db_password=${{ secrets.DB_PASSWORD }}" \
             -var="db_host=${{ secrets.DB_HOST }}" \
             -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}" \
-            -var="seeder_container=${{ vars.SEEDER_CONTAINER }}" 
+            -var="seeder_container=${{ vars.SEEDER_CONTAINER }}" \
             -auto-approve
 
   delete_ecr_images:
-    name: "Delete ECR Images"
+    name: Delete ECR Images
     runs-on: ubuntu-latest
     needs: full_destroy
     if: github.event.inputs.confirm_destroy == 'destroy'
@@ -171,3 +171,5 @@ jobs:
           TAG=$(echo "${{ github.event.inputs.container_image }}" | cut -d':' -f2)
           REPO=$(echo "${{ github.event.inputs.container_image }}" | cut -d'/' -f2 | cut -d':' -f1)
           aws ecr batch-delete-image --repository-name $REPO --image-ids imageTag=$TAG
+
+
