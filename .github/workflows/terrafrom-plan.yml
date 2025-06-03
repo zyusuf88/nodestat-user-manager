@@ -136,7 +136,7 @@ jobs:
             -var="record_name=${{ vars.RECORD_NAME }}" \
             -var="task_role_arn=${{ secrets.TASK_ROLE_ARN }}" \
             -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \
-            -var="container_image=${{ github.event.inputs.container_image }}"\
+            -var="container_image=${{ github.event.inputs.container_image }}" \
             -var="db_name=${{ vars.DB_NAME }}" \
             -var="s3_bucket_name=${{ vars.S3_BUCKET_NAME }}" \
             -var="db_identifier=${{ vars.DB_IDENTIFIER }}" \
@@ -146,7 +146,6 @@ jobs:
             -var="db_host=${{ secrets.DB_HOST }}" \
             -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}" \
             -var="seeder_container=${{ secrets.SEEDER_CONTAINER }}" \
-            -out=tfplan
        
       - name: Set up TFLint
         uses: terraform-linters/setup-tflint@v4
@@ -184,7 +183,7 @@ jobs:
             -var="db_password=${{ secrets.DB_PASSWORD }}" \
             -var="db_host=${{ secrets.DB_HOST }}" \
             -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}"\
-            -var="seeder_container=${{vars.SEEDER_CONTAINER }}" \
+            -var="seeder_container=${{ secrets.SEEDER_CONTAINER }}" \
             -input=false \
             -out=tfplan
 
