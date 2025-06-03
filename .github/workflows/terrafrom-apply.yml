@@ -49,11 +49,14 @@ jobs:
             -backend-config="region=${{ secrets.AWS_REGION }}" \
             -backend-config="encrypt=true"
 
-      - name: Download Terraform Plan
-        uses: actions/download-artifact@v4
-        with:
-          name: terraform-plan
-          path: ./terraform
+      - name: Download Terraform Plan from s3
+        run: |
+          aws s3 cp s3://${{ secrets.TERRAFORM_STATE_BUCKET }}/tfplan tfplan
+
+      - name: Clean up tfplan from S3
+        if: always()
+        run: |
+          aws s3 rm s3://${{ secrets.TERRAFORM_STATE_BUCKET }}/tfplan
 
       - name: Terraform Apply
         run: terraform apply -input=false tfplan
