@@ -144,7 +144,8 @@ jobs:
             -var="db_username=${{ secrets.DB_USERNAME }}" \
             -var="db_password=${{ secrets.DB_PASSWORD }}" \
             -var="db_host=${{ secrets.DB_HOST }}" \
-            -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}"
+            -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}" \
+            -var="seeder_container=${{ env.SEEDER_CONTAINER }}" 
             -input=false \
             -out=tfplan
        
@@ -183,7 +184,8 @@ jobs:
             -var="db_username=${{ secrets.DB_USERNAME }}" \
             -var="db_password=${{ secrets.DB_PASSWORD }}" \
             -var="db_host=${{ secrets.DB_HOST }}" \
-            -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}"
+            -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}"\
+            -var="seeder_container=${{ env.SEEDER_CONTAINER }}" 
             -input=false \
             -out=tfplan
 
