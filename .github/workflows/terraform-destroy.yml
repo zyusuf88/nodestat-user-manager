@@ -70,7 +70,8 @@ jobs:
           -var="db_username=${{ secrets.DB_USERNAME }}" \
           -var="db_password=${{ secrets.DB_PASSWORD }}" \
           -var="db_host=${{ secrets.DB_HOST }}" \
-          -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}"
+          -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}" \
+          -var="seeder_container=${{ env.SEEDER_CONTAINER }}" 
 
       - name: Terraform Destroy ALB
         run: |
@@ -89,7 +90,8 @@ jobs:
             -var="db_username=${{ secrets.DB_USERNAME }}" \
             -var="db_password=${{ secrets.DB_PASSWORD }}" \
             -var="db_host=${{ secrets.DB_HOST }}" \
-            -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}"
+            -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}" \
+            -var="seeder_container=${{ vars.SEEDER_CONTAINER }}" 
             -auto-approve
 
   full_destroy:
@@ -146,7 +148,8 @@ jobs:
             -var="db_username=${{ secrets.DB_USERNAME }}" \
             -var="db_password=${{ secrets.DB_PASSWORD }}" \
             -var="db_host=${{ secrets.DB_HOST }}" \
-            -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}"
+            -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}" \
+            -var="seeder_container=${{ vars.SEEDER_CONTAINER }}" 
             -auto-approve
 
   delete_ecr_images:
