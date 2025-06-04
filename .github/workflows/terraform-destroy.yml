@@ -11,8 +11,8 @@ on:
         description: "ECR repository name (e.g. node-app)"
         required: true
         type: string
-      ecr_tag:
-        description: "Tag to delete (e.g., latest, v1.0.0, staging)"
+      image_tag:
+        description: "Image tag to delete (e.g. latest)"
         required: true
         type: string
 
@@ -140,7 +140,6 @@ jobs:
             -var="task_role_arn=${{ secrets.TASK_ROLE_ARN }}" \
             -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \   
             -var="db_name=${{ vars.DB_NAME }}" \
-            -var="container_image=${{ github.event.inputs.container_image }}" \
             -var="s3_bucket_name=${{ vars.S3_BUCKET_NAME }}" \
             -var="db_identifier=${{ vars.DB_IDENTIFIER }}" \
             -var="ssm_parameter_access=${{ secrets.SSM_PARAMETER_ACCESS }}" \
@@ -198,7 +197,6 @@ jobs:
           -var="task_role_arn=${{ secrets.TASK_ROLE_ARN }}" \
           -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \         
           -var="db_name=${{ vars.DB_NAME }}" \
-            -var="container_image=${{ github.event.inputs.container_image }}" \
           -var="s3_bucket_name=${{ vars.S3_BUCKET_NAME }}" \
           -var="db_identifier=${{ vars.DB_IDENTIFIER }}" \
           -var="ssm_parameter_access=${{ secrets.SSM_PARAMETER_ACCESS }}" \
@@ -225,10 +223,10 @@ jobs:
 
         - name: Delete ECR Images
           run: |
-            echo "Deleting image ${{ github.event.inputs.ecr_repository }}:${{ github.event.inputs.ecr_tag }} from ECR..."
+            echo "Deleting image ${{ github.event.inputs.ecr_repository }}:${{ github.event.inputs.image_tag }}"
                 aws ecr batch-delete-image \
                   --repository-name "${{ github.event.inputs.ecr_repository }}" \
-                  --image-ids imageTag="${{ github.event.inputs.ecr_tag }}"
+                  --image-ids imageTag="${{ github.event.inputs.image_tag }}"
 
 
 
