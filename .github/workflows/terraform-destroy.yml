@@ -64,7 +64,7 @@ jobs:
           -var="task_role_arn=${{ secrets.TASK_ROLE_ARN }}" \
           -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \
           -var="db_name=${{ vars.DB_NAME }}" \
-          -var="container_image=${{ github.event.inputs.container_image }}"
+          -var="container_image=${{ github.event.inputs.container_image }}" \
           -var="s3_bucket_name=${{ vars.S3_BUCKET_NAME }}" \
           -var="db_identifier=${{ vars.DB_IDENTIFIER }}" \
           -var="ssm_parameter_access=${{ secrets.SSM_PARAMETER_ACCESS }}" \
