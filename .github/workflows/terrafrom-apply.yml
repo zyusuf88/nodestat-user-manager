@@ -63,4 +63,4 @@ jobs:
 
       - name: Upload SQL file to S3 to trigger Lambda
         run: |
-          aws s3 cp ./modules/lambda/init-users.sql s3://${{ secrets.LAMBDA_SQL_BUCKET }}/init-users.sql
+          aws s3 cp ../modules/lambda/init-users.sql s3://${{ secrets.LAMBDA_SQL_BUCKET }}/init-users.sql

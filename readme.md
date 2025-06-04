@@ -145,7 +145,7 @@ This error occurred because the database was successfully provisioned, but had n
 To fix this, I simply seeded the database by uploading a SQL file to the project's configured S3 bucket. This is part of the infrastructure's serverless automation pipeline:
 
 ```bash
-aws s3 cp ./init-users.sql s3://my-s3-bucket-673458/init-users.sql
+aws s3 cp ./init-users.sql s3://your-s3-bucket/init-users.sql
 ```
 ---
 ## Conclusion
