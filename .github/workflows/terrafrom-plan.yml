@@ -117,12 +117,6 @@ jobs:
         with:
           terraform_version: 1.5.0
 
-
-      - name: Create a Terraform Statebucket
-        run: |
-          aws s3api head-bucket --bucket ${{ secrets.TERRAFORM_STATE_BUCKET }} 2>/dev/null || \
-          aws s3api create-bucket --bucket ${{ secrets.TERRAFORM_STATE_BUCKET }} --region ${{ secrets.AWS_REGION }} --create-bucket-configuration LocationConstraint=${{ secrets.AWS_REGION }}
-
       - name: Terraform Init
         run: |
           terraform init \
@@ -134,23 +128,23 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Refresh Terraform State
-        run: |
-          terraform refresh \
-            -var="domain_name=${{ vars.DOMAIN_NAME }}" \
-            -var="project_name=${{ vars.PROJECT_NAME }}" \
-            -var="record_name=${{ vars.RECORD_NAME }}" \
-            -var="task_role_arn=${{ secrets.TASK_ROLE_ARN }}" \
-            -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \          
-            -var="db_name=${{ vars.DB_NAME }}" \
-            -var="s3_bucket_name=${{ vars.S3_BUCKET_NAME }}" \
-            -var="db_identifier=${{ vars.DB_IDENTIFIER }}" \
-            -var="ssm_parameter_access=${{ secrets.SSM_PARAMETER_ACCESS }}" \
-            -var="db_username=${{ secrets.DB_USERNAME }}" \
-            -var="db_password=${{ secrets.DB_PASSWORD }}" \
-            -var="db_host=${{ secrets.DB_HOST }}" \
-            -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}" \
-            -var="seeder_container=${{ secrets.SEEDER_CONTAINER }}" \
+      # - name: Refresh Terraform State
+      #   run: |
+      #     terraform refresh \
+      #       -var="domain_name=${{ vars.DOMAIN_NAME }}" \
+      #       -var="project_name=${{ vars.PROJECT_NAME }}" \
+      #       -var="record_name=${{ vars.RECORD_NAME }}" \
+      #       -var="task_role_arn=${{ secrets.TASK_ROLE_ARN }}" \
+      #       -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \          
+      #       -var="db_name=${{ vars.DB_NAME }}" \
+      #       -var="s3_bucket_name=${{ vars.S3_BUCKET_NAME }}" \
+      #       -var="db_identifier=${{ vars.DB_IDENTIFIER }}" \
+      #       -var="ssm_parameter_access=${{ secrets.SSM_PARAMETER_ACCESS }}" \
+      #       -var="db_username=${{ secrets.DB_USERNAME }}" \
+      #       -var="db_password=${{ secrets.DB_PASSWORD }}" \
+      #       -var="db_host=${{ secrets.DB_HOST }}" \
+      #       -var="db_secret_name=${{ secrets.DB_SECRET_NAME }}" \
+      #       -var="seeder_container=${{ secrets.SEEDER_CONTAINER }}" \
        
       - name: Set up TFLint
         uses: terraform-linters/setup-tflint@v4
