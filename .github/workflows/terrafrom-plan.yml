@@ -7,7 +7,7 @@ on:
         description: 'Type "plan" to confirm generating a plan'
         required: true
         type: string
-      ecr_repository:
+      container_image:
         description: "Full ECR image URI with tag (e.g., 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-app:latest)"
         required: true
         type: string
@@ -132,6 +132,7 @@ jobs:
             -var="record_name=${{ vars.RECORD_NAME }}" \
             -var="task_role_arn=${{ secrets.TASK_ROLE_ARN }}" \
             -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \
+            -var="container_image=${{ github.event.inputs.container_image }}" \
             -var="db_name=${{ vars.DB_NAME }}" \
             -var="s3_bucket_name=${{ vars.S3_BUCKET_NAME }}" \
             -var="db_identifier=${{ vars.DB_IDENTIFIER }}" \
@@ -159,6 +160,7 @@ jobs:
             -var="record_name=${{ vars.RECORD_NAME }}" \
             -var="task_role_arn=${{ secrets.TASK_ROLE_ARN }}" \
             -var="execution_role_arn=${{ secrets.EXECUTION_ROLE_ARN }}" \
+            -var="container_image=${{ github.event.inputs.container_image }}" \
             -var="db_name=${{ vars.DB_NAME }}" \
             -var="s3_bucket_name=${{ vars.S3_BUCKET_NAME }}" \
             -var="db_identifier=${{ vars.DB_IDENTIFIER }}" \
@@ -170,7 +172,7 @@ jobs:
             -var="seeder_container=${{ secrets.SEEDER_CONTAINER }}" \
             -input=false \
             -out=tfplan
-
+            
       - name: Upload Terraform Plan to s3
         run: |
           aws s3 cp tfplan s3://${{ secrets.TERRAFORM_STATE_BUCKET }}/tfplan
