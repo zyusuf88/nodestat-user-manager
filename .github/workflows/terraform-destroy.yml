@@ -43,6 +43,9 @@ jobs:
         with:
           terraform_version: 1.5.0
 
+      - name: Download tfvars from S3
+        run: aws s3 cp s3://my-apps-state-bucket12/configs/terraform.tfvars terraform.tfvars
+
       - name: Terraform Init
         run: |
           terraform init \
@@ -51,18 +54,18 @@ jobs:
             -backend-config="region=${{ secrets.AWS_REGION }}" \
             -backend-config="encrypt=true"
 
-    
+  
       - name: Destroy ALB
-        run: terraform destroy -target=module.alb -auto-approve
+        run: terraform destroy -input=false -target=module.alb -auto-approve
 
       - name: Destroy Lambda 
-        run: terraform destroy -target=module.lambda -auto-approve
+        run: terraform destroy -input=false -target=module.lambda -auto-approve
         
       - name: Terraform Refresh
-        run: terraform refresh
+        run: terraform refresh -input=false
       
       - name: Terraform Full Destroy
-        run: terraform destroy -auto-approve 
+        run: terraform destroy -input=false -auto-approve 
 
       - name: Delete ECR Images
         run: |
