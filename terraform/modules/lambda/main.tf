@@ -24,7 +24,7 @@ resource "aws_s3_bucket_versioning" "versioning" {
 
 #Lambda function that gets triggered by S3 uploads
 resource "aws_lambda_function" "init_db" {
-  function_name    = "db-seed-handler"
+  function_name    = var.lambda_function_name
   handler          = "lambda_function.lambda_handler"
   runtime          = "python3.9"
   role             = var.lambda_exec_role_arn

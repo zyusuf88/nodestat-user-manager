@@ -1,6 +1,6 @@
 
 resource "aws_ecs_cluster" "threat_app_cluster" {
-  name = "threat-app-cluster"
+  name = var.ecs_cluster_name
  #checkov requirement
   setting {
     name  = "containerInsights"
@@ -9,17 +9,16 @@ resource "aws_ecs_cluster" "threat_app_cluster" {
 }
 
 resource "aws_ecs_task_definition" "this" {
-  family                   = "threat-app-td"
+  family                   = var.task_family_name
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  #task_role_arn       = var.task_role_arn
   execution_role_arn  = var.execution_role_arn
   cpu                     = 1024
   memory                  = 2048
 
   container_definitions = jsonencode([
     {
-      name                 = "threat-app-1"
+      name                 = var.container_name
       image                = var.container_image
       cpu                  = 512
       memory               = 1536
@@ -100,7 +99,7 @@ resource "aws_cloudwatch_log_group" "ecs_logs" {
 
 
 resource "aws_ecs_task_definition" "db_seeder" {
-  family                   = "user-portal-db-seeder"
+  family                   = var.seeder_task_family_name
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = 256
@@ -135,8 +134,8 @@ resource "aws_ecs_task_definition" "db_seeder" {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          "awslogs-group"         = "/ecs/db-seeder-task",
-          "awslogs-region"        = "eu-west-2",
+          "awslogs-group"         = var.seeder_log_group_name,
+          "awslogs-region"        = var.region,
           "awslogs-stream-prefix" = "db-seeder"
         }
       }
@@ -151,7 +150,7 @@ resource "aws_ecs_task_definition" "db_seeder" {
 
 # ECS Service
 resource "aws_ecs_service" "this" {
-  name            = "threat-app-service"
+  name            = var.ecs_service_name
   cluster         = aws_ecs_cluster.threat_app_cluster.id
   task_definition = aws_ecs_task_definition.this.arn
   desired_count   = 1
@@ -165,7 +164,7 @@ resource "aws_ecs_service" "this" {
 
   load_balancer {
     target_group_arn = var.target_group_arn
-    container_name   = "threat-app-1"
+    container_name   = var.container_name
     container_port   = 3000
   }
 
