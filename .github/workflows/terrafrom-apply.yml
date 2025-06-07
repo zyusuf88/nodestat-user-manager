@@ -32,9 +32,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+      - name: Download tfvars from S3
+        run: aws s3 cp s3://my-apps-state-bucket12/configs/terraform.tfvars terraform.tfvars
+
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -42,8 +42,7 @@ jobs:
           terraform_version: 1.5.0
 
       - name: Terraform Init
-        run: |
-          terraform init \
+        run: terraform init \
             -backend-config="bucket=${{ secrets.TERRAFORM_STATE_BUCKET }}" \
             -backend-config="key=${{ secrets.TERRAFORM_STATE_KEY }}" \
             -backend-config="region=${{ secrets.AWS_REGION }}" \
