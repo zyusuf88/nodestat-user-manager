@@ -4,7 +4,8 @@
 
 It features a clean frontend, RESTful API, and MySQL backend all fully containerised with Docker and deployed to AWS using a **modular Terraform** setup. While the app is simple by design, it’s backed by a **production-grade cloud architecture**, including automated database seeding via Lambda, secure secret injection  and plans for CI/CD integration.
 
- ![demo of app ](https://github.com/user-attachments/assets/a6225c79-f35d-4661-ba18-c437f1e76e24)
+ ![demo of app ](https://github.com/user-attachments/assets/7ffc0012-59f6-4fb9-9e53-bd6bfa213f0a)
+
 
 ## Features
 - Fetch and display a list of users with a single click.
@@ -12,70 +13,6 @@ It features a clean frontend, RESTful API, and MySQL backend all fully container
 - Modern and clean UI for easy navigation.
 - Fully containerised with Docker for seamless setup.
 - MySQL database integration for robust data management.
-
-## Structure
-
-```
-.
-├── app/
-│   ├── index.html
-│   ├── index.js
-│   └── init.sql
-├── lambda/
-│   └── lambda_build/
-│       ├── lambda_function.py
-│       └── lambda.zip
-├── terraform/
-│   ├── backend.hcl
-│   ├── main.tf
-│   ├── provider.tf
-│   ├── terraform.tfvars
-│   ├── variables.tf
-│   └── modules/
-│       ├── acm/
-│       │   ├── main.tf
-│       │   ├── outputs.tf
-│       │   └── variables.tf
-│       ├── alb/
-│       │   ├── main.tf
-│       │   ├── outputs.tf
-│       │   └── variables.tf
-│       ├── ecs/
-│       │   ├── main.tf
-│       │   ├── outputs.tf
-│       │   └── variables.tf
-│       ├── iam/
-│       │   ├── main.tf
-│       │   ├── outputs.tf
-│       │   └── variables.tf
-│       ├── lambda/
-│       │   ├── main.tf
-│       │   ├── outputs.tf
-│       │   ├── variables.tf
-│       │   └── init-users.sql
-│       ├── rds/
-│       │   ├── main.tf
-│       │   ├── outputs.tf
-│       │   └── variables.tf
-│       ├── route53/
-│       │   ├── main.tf
-│       │   └── variables.tf
-│       ├── s3/
-│       │   └── main.tf
-│       ├── security/
-│       │   ├── main.tf
-│       │   ├── outputs.tf
-│       │   └── variables.tf
-│       └── vpc/
-│           ├── main.tf
-│           ├── outputs.tf
-│           └── variables.tf
-├── docker-compose.yml
-├── Dockerfile
-├── dockerfile.seeder
-└── README.md
-
-```
 
 ## Tech Stack
 
@@ -86,6 +23,14 @@ It features a clean frontend, RESTful API, and MySQL backend all fully container
 - **Deployment**: ECS (Fargate), RDS, Lambda
 - **Infrastructure**: Terraform (modularised)
 - **Cloud Services**: AWS (ECS, RDS, Lambda, S3, Route53, ACM, IAM)
+
+## Architecture diagram
+
+![Image](https://github.com/user-attachments/assets/b47290a2-3ccd-45d4-b8b5-569594ed3570)
+
+<sub>The diagram shows how the app runs on AWS: frontend + API on ECS (Fargate), MySQL on RDS, with Lambda auto-seeding via S3. All infrastructure is managed using modular Terraform.</sub>
+<br>
+
 
 ## Data Seeding Process
 - Upload any file matching the pattern init-*.sql to the configured S3 bucket.
@@ -105,7 +50,7 @@ The application includes an optional automated database initialisation pipeline 
 
 <br>
 
-> [! IMPORTANT] <br>
+> [!IMPORTANT] <br>
 > **CloudWatch Logs** provided full-stack observability, from S3 event triggers to Lambda execution to ECS task behavior. <br>
 > Logs also confirmed environment variables and secrets were being injected correctly, and made silent failures (like missing IAM permissions) visible and actionable.
 
@@ -114,11 +59,11 @@ The application includes an optional automated database initialisation pipeline 
 
 ## Interact with the Application
 
-<img width="601" alt="Image" src="https://github.com/user-attachments/assets/670b1461-6cc1-47c2-a88a-3b78d14ce694" />
+<img width="563" alt="Image" src="https://github.com/user-attachments/assets/bcf429b7-bd80-4a89-98e2-7a409f7d5865" />
 
 The application is publicly accessible at:
 
-https://coder.yzeynab.com
+https://users.yzeynab.com
 
 This domain is configured using Amazon Route 53 and served securely via an HTTPS-enabled Application Load Balancer with an AWS ACM certificate.
 
