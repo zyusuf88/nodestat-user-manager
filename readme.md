@@ -1,5 +1,7 @@
 #  NodeStat User Manager
 
+[![Build and Push to ECR](https://github.com/zyusuf88/nodestat-user-manager/actions/workflows/build-and-push-to-ecr.yml/badge.svg?branch=feature%2Fupdate-variables)](https://github.com/zyusuf88/nodestat-user-manager/actions/workflows/build-and-push-to-ecr.yml) [![Terraform Plan](https://github.com/zyusuf88/nodestat-user-manager/actions/workflows/terrafrom-plan.yml/badge.svg?branch=feature%2Fupdate-variables)](https://github.com/zyusuf88/nodestat-user-manager/actions/workflows/terrafrom-plan.yml) [![Terraform Apply](https://github.com/zyusuf88/nodestat-user-manager/actions/workflows/terrafrom-apply.yml/badge.svg)](https://github.com/zyusuf88/nodestat-user-manager/actions/workflows/terrafrom-apply.yml) [![Terraform Destroy](https://github.com/zyusuf88/nodestat-user-manager/actions/workflows/terraform-destroy.yml/badge.svg?branch=feature%2Fupdate-variables)](https://github.com/zyusuf88/nodestat-user-manager/actions/workflows/terraform-destroy.yml)
+
 **NodeStat User Manager** is a lightweight Node.js application designed to manage users and monitor server status in real time.
 
 It features a clean frontend, RESTful API, and MySQL backend all fully containerised with Docker and deployed to AWS using a **modular Terraform** setup. While the app is simple by design, it’s backed by a **production-grade cloud architecture**, including automated database seeding via Lambda, secure secret injection  and plans for CI/CD integration.
