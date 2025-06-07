@@ -9,7 +9,7 @@ resource "aws_ecs_cluster" "threat_app_cluster" {
 }
 
 resource "aws_ecs_task_definition" "this" {
-  family                   = var.task_family_name  
+  family                   = var.task_family_name
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   execution_role_arn  = var.execution_role_arn

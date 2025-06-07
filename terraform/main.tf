@@ -59,7 +59,7 @@ module "ecs" {
   rds_secret_arn = module.rds.rds_secret_arn
   seeder_container = var.seeder_container
   ecs_cluster_name = var.ecs_cluster_name
-  task_family_name = var.task_family_name  
+  task_family_name = var.task_family_name
   container_name = var.container_name
   seeder_log_group_name = var.seeder_log_group_name
   ecs_service_name  = var.ecs_service_name
