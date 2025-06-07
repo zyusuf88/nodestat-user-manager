@@ -75,33 +75,8 @@ jobs:
       - name: Run Checkov
         run: checkov -d . --soft-fail
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
-
-      - name: Terraform Init
-        run: |
-          terraform init \
-            -backend-config="bucket=${{ secrets.TERRAFORM_STATE_BUCKET }}" \
-            -backend-config="key=${{ secrets.TERRAFORM_STATE_KEY }}" \
-            -backend-config="region=${{ secrets.AWS_REGION }}" \
-            -backend-config="encrypt=true"
-            
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Set up TFLint
-        uses: terraform-linters/setup-tflint@v4
-        with:
-          tflint_version: latest
-
-      - name: Run TFLint 
-        run: tflint --recursive || true
-
-
-
-        
+   
+    
 
   terraform_plan:
     name: "Terraform Plan"
@@ -112,6 +87,7 @@ jobs:
     defaults:
       run:
         working-directory: ./terraform
+
 
     steps:
       - name: Checkout
@@ -129,10 +105,32 @@ jobs:
         with:
           terraform_version: 1.5.0
 
+      - name: Download tfvars from S3
+        run: aws s3 cp s3://my-apps-state-bucket12/configs/terraform.tfvars terraform.tfvars
+
+
+      - name: Terraform Init
+        run: |
+          terraform init -input=false \
+            -backend-config="bucket=${{ secrets.TERRAFORM_STATE_BUCKET }}" \
+            -backend-config="key=${{ secrets.TERRAFORM_STATE_KEY }}" \
+            -backend-config="region=${{ secrets.AWS_REGION }}" \
+            -backend-config="encrypt=true"
+            
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Set up TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+
+      - name: Run TFLint 
+        run: tflint --recursive || true
 
       - name: Terraform Plan
         run: |
-          terraform plan \
+          terraform plan -input=false \
             -var="container_image=${{ github.event.inputs.container_image }}" \
             -out=tfplan
             
