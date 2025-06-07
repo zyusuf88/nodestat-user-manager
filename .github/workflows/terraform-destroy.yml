@@ -12,7 +12,6 @@ on:
         required: true
         type: string
 
-
 permissions:
   contents: read
   actions: write
@@ -21,7 +20,7 @@ jobs:
   terraform_destroy:
     name: Full Terraform Destroy
     runs-on: ubuntu-latest
-    if: github.event.inputs.confirm_destroy == 'destroy'   
+    if: github.event.inputs.confirm_destroy == 'destroy'
 
     defaults:
       run:
@@ -54,29 +53,25 @@ jobs:
             -backend-config="region=${{ secrets.AWS_REGION }}" \
             -backend-config="encrypt=true"
 
-  
       - name: Destroy ALB
         run: terraform destroy -input=false -target=module.alb -auto-approve
 
-      - name: Destroy Lambda 
+      - name: Destroy Lambda
         run: terraform destroy -input=false -target=module.lambda -auto-approve
-        
+
       - name: Terraform Refresh
         run: terraform refresh -input=false
-      
+
       - name: Terraform Full Destroy
-        run: terraform destroy -input=false -auto-approve 
+        run: terraform destroy -input=false -auto-approve
 
       - name: Delete ECR Images
         run: |
-              IMAGE="${{ github.event.inputs.container_image }}"
-              REPOSITORY=$(echo "$IMAGE" | cut -d '/' -f2 | cut -d ':' -f1)
-              TAG=$(echo "$IMAGE" | cut -d ':' -f2)
-              echo "REPOSITORY=$REPOSITORY" >> $GITHUB_ENV
-              echo "TAG=$TAG" >> $GITHUB_ENV
-              aws ecr batch-delete-image \
-                  --repository-name "$REPOSITORY" \
-                  --image-ids imageTag="$TAG"
-
-
-
+          IMAGE="${{ github.event.inputs.container_image }}"
+          REPOSITORY=$(echo "$IMAGE" | cut -d '/' -f2 | cut -d ':' -f1)
+          TAG=$(echo "$IMAGE" | cut -d ':' -f2)
+          echo "REPOSITORY=$REPOSITORY" >> $GITHUB_ENV
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          aws ecr batch-delete-image \
+              --repository-name "$REPOSITORY" \
+              --image-ids imageTag="$TAG"

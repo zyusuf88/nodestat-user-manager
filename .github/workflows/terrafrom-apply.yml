@@ -44,22 +44,20 @@ jobs:
         run: |
           aws s3 cp s3://${{ secrets.TERRAFORM_STATE_BUCKET }}/tfplan tfplan
 
-
       - name: Terraform Init
         run: |
-           terraform init -input=false \
-            -backend-config="bucket=${{ secrets.TERRAFORM_STATE_BUCKET }}" \
-            -backend-config="key=${{ secrets.TERRAFORM_STATE_KEY }}" \
-            -backend-config="region=${{ secrets.AWS_REGION }}" \
-            -backend-config="encrypt=true"
-
+          terraform init -input=false \
+           -backend-config="bucket=${{ secrets.TERRAFORM_STATE_BUCKET }}" \
+           -backend-config="key=${{ secrets.TERRAFORM_STATE_KEY }}" \
+           -backend-config="region=${{ secrets.AWS_REGION }}" \
+           -backend-config="encrypt=true"
 
       - name: Terraform Apply
         run: terraform apply -input=false tfplan
 
       - name: Upload SQL file to S3 to trigger Lambda
         run: |
-          aws s3 cp ../modules/lambda/init-users.sql s3://${{ secrets.LAMBDA_SQL_BUCKET }}/init-users.sql
+          aws s3 cp ./modules/lambda/init-users.sql s3://${{ secrets.LAMBDA_SQL_BUCKET }}/init-users.sql
 
       - name: Clean up tfplan from S3
         if: always()

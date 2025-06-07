@@ -41,7 +41,6 @@ jobs:
       - name: Download tfvars from S3
         run: aws s3 cp s3://my-apps-state-bucket12/configs/terraform.tfvars terraform.tfvars
 
-
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v1
         continue-on-error: true
@@ -75,9 +74,6 @@ jobs:
       - name: Run Checkov
         run: checkov -d . --soft-fail
 
-   
-    
-
   terraform_plan:
     name: "Terraform Plan"
     runs-on: ubuntu-latest
@@ -87,7 +83,6 @@ jobs:
     defaults:
       run:
         working-directory: ./terraform
-
 
     steps:
       - name: Checkout
@@ -108,7 +103,6 @@ jobs:
       - name: Download tfvars from S3
         run: aws s3 cp s3://my-apps-state-bucket12/configs/terraform.tfvars terraform.tfvars
 
-
       - name: Terraform Init
         run: |
           terraform init -input=false \
@@ -116,7 +110,7 @@ jobs:
             -backend-config="key=${{ secrets.TERRAFORM_STATE_KEY }}" \
             -backend-config="region=${{ secrets.AWS_REGION }}" \
             -backend-config="encrypt=true"
-            
+
       - name: Terraform Validate
         run: terraform validate
 
@@ -125,7 +119,7 @@ jobs:
         with:
           tflint_version: latest
 
-      - name: Run TFLint 
+      - name: Run TFLint
         run: tflint --recursive || true
 
       - name: Terraform Plan
@@ -133,8 +127,7 @@ jobs:
           terraform plan -input=false \
             -var="container_image=${{ github.event.inputs.container_image }}" \
             -out=tfplan
-            
+
       - name: Upload Terraform Plan to s3
         run: |
           aws s3 cp tfplan s3://${{ secrets.TERRAFORM_STATE_BUCKET }}/tfplan
-  
