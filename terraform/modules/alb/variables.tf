@@ -21,3 +21,13 @@ variable "project_name" {
   description = "Project name prefix"
   type        = string
 }
+
+variable "alb_name" {
+  description = "name of alb"
+  type        = string
+}
+
+variable "alb_tg_name" {
+  description = "name of alb alb target"
+  type        = string
+}

@@ -111,3 +111,38 @@ variable "seeder_container" {
   description = "ECR image URI for the DB seeder container"
   type        = string
 }
+
+
+variable "ecs_cluster_name" {
+  description = "ECS  cluster name"
+  type        = string
+}
+
+variable "task_family_name" {
+  description = "Family name for ECS task definition"
+  type        = string
+}
+
+variable "container_name" {
+  description = "Name of the container in the task definition"
+  type        = string
+}
+
+variable "seeder_task_family_name" {
+  description = "Family name for the DB seeder task"
+  type        = string
+}
+
+variable "seeder_log_group_name" {
+  description = "CloudWatch log group name for the DB seeder"
+  type        = string
+}
+
+variable "region" {
+  default = "eu-west-2"
+}
+
+variable "ecs_service_name" {
+  description = "ecs service name"
+  type        = string
+}

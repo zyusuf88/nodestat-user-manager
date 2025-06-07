@@ -42,3 +42,8 @@ variable "security_group_id" {
 variable "private_subnet_ids" {
   type        = list(string)
 }
+
+variable "lambda_function_name" {
+  description = "Name of the Lambda function"
+  type        = string
+}

@@ -29,6 +29,8 @@ module "alb" {
   security_group_id = module.security.security_group_id
   certificate_arn   = module.acm.certificate_arn
   project_name          = var.project_name
+  alb_name = var.alb_name
+  alb_tg_name = var.alb_tg_name
 }
 
 
@@ -56,6 +58,13 @@ module "ecs" {
   db_host       = module.rds.rds_endpoint
   rds_secret_arn = module.rds.rds_secret_arn
   seeder_container = var.seeder_container
+  ecs_cluster_name = var.ecs_cluster_name
+  task_family_name = var.task_family_name  
+  container_name = var.container_name
+  seeder_log_group_name = var.seeder_log_group_name
+  ecs_service_name  = var.ecs_service_name
+  region = var.region
+  seeder_task_family_name = var.seeder_task_family_name
 
 }
 module "route53" {
@@ -109,4 +118,5 @@ module "lambda" {
   db_host = var.db_host
   private_subnet_ids            = module.vpc.private_subnet_ids
  security_group_id     = module.security.security_group_id
+ lambda_function_name = var.lambda_function_name
 }

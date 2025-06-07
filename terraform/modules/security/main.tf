@@ -7,8 +7,8 @@ resource "aws_security_group" "this" {
 
   ingress {
     description = "http access"
-    from_port   = 80
-    to_port     = 80
+    from_port   = var.http_port
+    to_port     = var.http_port
     protocol    = "tcp"
     cidr_blocks = var.allowed_cidr_blocks
 
@@ -16,25 +16,25 @@ resource "aws_security_group" "this" {
   }
 
   ingress {
-     description = "allow inbound traffic"
-    from_port   = 443
-    to_port     = 443
+     description = "allow https inbound traffic"
+    from_port   = var.https_port
+    to_port     = var.https_port
     protocol    = "tcp"
     cidr_blocks = var.allowed_cidr_blocks
   }
 
   ingress {
     description = "allow container access"
-    from_port   = 3000
-    to_port     = 3000
+    from_port   = var.app_port
+    to_port     = var.app_port
     protocol    = "tcp"
     cidr_blocks = var.allowed_cidr_blocks
   }
 
   ingress {
   description = "MySQL database access"
-  from_port   = 3306
-  to_port     = 3306
+  from_port   = var.db_port
+  to_port     = var.db_port
   protocol    = "tcp"
   self = true
 }
