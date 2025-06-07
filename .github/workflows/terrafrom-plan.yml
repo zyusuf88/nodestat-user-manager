@@ -75,6 +75,11 @@ jobs:
       - name: Run Checkov
         run: checkov -d . --soft-fail
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
       - name: Terraform Init
         run: terraform init 
             
